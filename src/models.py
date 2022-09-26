@@ -53,7 +53,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('usuarios.id'), nullable=False)
     favorites = relationship("Favorites")
 
     def update(self):
@@ -80,8 +80,21 @@ class Follower(Base):
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    from_user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    from_user_id = Column(Integer, ForeignKey('usuarios.id'), nullable=False)
+    to_user_id = Column(Integer, ForeignKey('usuarios.id'), nullable=False)
+
+    def serializer(self):
+        return {}
+
+class Media(Base):
+    __tablename__ = 'media'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    url = Column(String(250), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
 
     def serializer(self):
         return {}
